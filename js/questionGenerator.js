@@ -17,8 +17,6 @@ export async function generateQuestion(subject, difficulty) {
 
     try {
         const response = await fetchFromAPI(prompt);
-        if (!response) throw new Error('No response from API');
-        
         const questionData = JSON.parse(response);
 
         if (shouldIncludeImage && questionData.imageDescription) {
@@ -33,7 +31,11 @@ export async function generateQuestion(subject, difficulty) {
         return questionData;
     } catch (error) {
         console.error('Question Generation Error:', error);
-        throw error;
+        return {
+            question: 'Failed to load question. Please try again.',
+            options: ['Error', 'Error', 'Error', 'Error'],
+            correctIndex: 0
+        };
     }
 }
 

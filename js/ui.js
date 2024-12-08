@@ -11,271 +11,340 @@ export class QuizUI {
 
     initializeElements() {
         // Setup container elements
-        this.setupContainer = document.getElementById('setup-container');
-        this.quizContainer = document.getElementById('quiz-container');
-        this.scoreContainer = document.getElementById('score-container');
-
-        // Form elements
-        this.subjectSelect = document.getElementById('subject-select');
-        this.subtopicSelect = document.getElementById('subtopic-select');
-        this.difficultySelect = document.getElementById('difficulty-select');
-        this.questionsSelect = document.getElementById('questions-select');
-        this.timeSelect = document.getElementById('time-select');
-        this.startQuizBtn = document.getElementById('start-quiz-btn');
-        this.difficultyInfo = document.getElementById('difficulty-info');
-
-        // Quiz elements
-        this.questionText = document.getElementById('question-text');
-        this.questionImage = document.getElementById('question-image');
-        this.optionsContainer = document.getElementById('options-container');
-        this.explanationContainer = document.getElementById('explanation-container');
-        this.learningObjectivesContainer = document.getElementById('learning-objectives-container');
-        this.nextBtnContainer = document.getElementById('next-button-container');
-        this.nextBtn = document.getElementById('next-btn');
-
-        // Timer and progress elements
-        this.timerElement = document.getElementById('time-remaining');
-        this.currentQuestionElement = document.getElementById('current-question');
-        this.totalQuestionsElement = document.getElementById('total-questions');
-
-        // Score elements
-        this.totalAttemptedElement = document.getElementById('total-attempted');
-        this.correctAnswersElement = document.getElementById('correct-answers');
-        this.wrongAnswersElement = document.getElementById('wrong-answers');
-        this.scorePercentageElement = document.getElementById('score-percentage');
-        this.restartBtn = document.getElementById('restart-btn');
+        this.elements = {
+            setupContainer: document.getElementById('setup-container'),
+            subjectSelect: document.getElementById('subject-select'),
+            subtopicSelect: document.getElementById('subtopic-select'),
+            difficultySelect: document.getElementById('difficulty-select'),
+            questionsSelect: document.getElementById('questions-select'),
+            timeSelect: document.getElementById('time-select'),
+            startQuizBtn: document.getElementById('start-quiz-btn'),
+            difficultyInfo: document.getElementById('difficulty-info'),
+            
+            // Quiz container elements
+            quizContainer: document.getElementById('quiz-container'),
+            quizContent: document.getElementById('quiz-content'),
+            timer: document.getElementById('timer'),
+            currentQuestion: document.getElementById('current-question'),
+            totalQuestions: document.getElementById('total-questions'),
+            nextBtnContainer: document.getElementById('next-button-container'),
+            nextBtn: document.getElementById('next-btn'),
+            
+            // Score elements
+            scoreContainer: document.getElementById('score-container'),
+            totalAttempted: document.getElementById('total-attempted'),
+            correctAnswers: document.getElementById('correct-answers'),
+            wrongAnswers: document.getElementById('wrong-answers'),
+            scorePercentage: document.getElementById('score-percentage'),
+            restartBtn: document.getElementById('restart-btn')
+        };
     }
 
     setupEventListeners() {
-        if (this.subjectSelect) {
-            this.subjectSelect.addEventListener('change', () => this.handleSubjectChange());
-        }
-        if (this.difficultySelect) {
-            this.difficultySelect.addEventListener('change', () => this.handleDifficultyChange());
-        }
-        if (this.startQuizBtn) {
-            this.startQuizBtn.addEventListener('click', () => this.handleStartQuiz());
-        }
-        if (this.nextBtn) {
-            this.nextBtn.addEventListener('click', () => this.handleNextQuestion());
-        }
-        if (this.restartBtn) {
-            this.restartBtn.addEventListener('click', () => this.restartQuiz());
-        }
+        // Setup form event listeners
+        this.elements.subjectSelect.addEventListener('change', () => this.handleSubjectChange());
+        this.elements.difficultySelect.addEventListener('change', () => this.handleDifficultyChange());
+        this.elements.startQuizBtn.addEventListener('click', () => this.startQuiz());
+        
+        // Quiz navigation event listeners
+        this.elements.nextBtn.addEventListener('click', () => this.nextQuestion());
+        this.elements.restartBtn.addEventListener('click', () => this.restartQuiz());
     }
 
     populateSubjects() {
-        if (!this.subjectSelect) return;
-
+        this.elements.subjectSelect.innerHTML = '<option value="">Choose a subject...</option>';
         Object.keys(SUBJECTS).forEach(subject => {
             const option = document.createElement('option');
             option.value = subject;
             option.textContent = subject;
-            this.subjectSelect.appendChild(option);
+            this.elements.subjectSelect.appendChild(option);
         });
     }
 
     handleSubjectChange() {
-        if (!this.subjectSelect || !this.subtopicSelect) return;
-
-        const selectedSubject = this.subjectSelect.value;
-        this.subtopicSelect.innerHTML = '<option value="">Choose a sub-topic...</option>';
-        this.subtopicSelect.disabled = !selectedSubject;
-
-        if (selectedSubject && SUBJECTS[selectedSubject]) {
-            SUBJECTS[selectedSubject].forEach(subtopic => {
+        const subject = this.elements.subjectSelect.value;
+        this.elements.subtopicSelect.innerHTML = '<option value="">Choose a sub-topic...</option>';
+        
+        if (subject && SUBJECTS[subject]) {
+            this.elements.subtopicSelect.disabled = false;
+            SUBJECTS[subject].forEach(subtopic => {
                 const option = document.createElement('option');
                 option.value = subtopic;
                 option.textContent = subtopic;
-                this.subtopicSelect.appendChild(option);
+                this.elements.subtopicSelect.appendChild(option);
             });
+        } else {
+            this.elements.subtopicSelect.disabled = true;
         }
     }
 
     handleDifficultyChange() {
-        if (!this.difficultySelect || !this.difficultyInfo) return;
-
-        const selectedDifficulty = this.difficultySelect.value;
-        this.difficultyInfo.textContent = DIFFICULTY_LEVELS[selectedDifficulty] || '';
+        const difficulty = this.elements.difficultySelect.value;
+        const info = DIFFICULTY_LEVELS[difficulty];
+        
+        if (info) {
+            this.elements.difficultyInfo.textContent = info;
+            this.elements.difficultyInfo.classList.add('show');
+        } else {
+            this.elements.difficultyInfo.classList.remove('show');
+        }
     }
 
-    async handleStartQuiz() {
-        if (!this.validateSetup()) return;
+    startQuiz() {
+        const subject = this.elements.subjectSelect.value;
+        const difficulty = this.elements.difficultySelect.value;
+        const questionLimit = parseInt(this.elements.questionsSelect.value);
+        const timeLimit = parseInt(this.elements.timeSelect.value);
 
-        const settings = {
-            subject: this.subjectSelect.value,
-            subtopic: this.subtopicSelect.value,
-            difficulty: this.difficultySelect.value,
-            questionLimit: parseInt(this.questionsSelect.value),
-            timeLimit: parseInt(this.timeSelect.value)
-        };
+        if (!subject || !difficulty) {
+            alert('Please select both subject and difficulty level.');
+            return;
+        }
 
-        this.quiz.difficulty = settings.difficulty;
-        this.quiz.timeLimit = settings.timeLimit;
-        this.quiz.questionLimit = settings.questionLimit;
+        this.quiz.difficulty = difficulty;
+        this.quiz.questionLimit = questionLimit;
+        this.quiz.timeLimit = timeLimit;
 
-        this.setupContainer.classList.add('hidden');
-        this.quizContainer.classList.remove('hidden');
+        this.elements.setupContainer.classList.add('hidden');
+        this.elements.quizContainer.classList.remove('hidden');
+        this.elements.totalQuestions.textContent = questionLimit || '∞';
 
-        await this.loadNextQuestion();
+        this.nextQuestion();
     }
 
-    async loadNextQuestion() {
-        const question = await this.quiz.generateQuestion(this.subjectSelect.value);
+    restartQuiz() {
+        this.quiz = new Quiz();
+        this.elements.quizContainer.classList.add('hidden');
+        this.elements.setupContainer.classList.remove('hidden');
+        this.elements.scoreContainer.classList.add('hidden');
+        this.elements.nextBtnContainer.classList.add('hidden');
+        this.elements.currentQuestion.textContent = '1';
+    }
+
+    showSkeletonLoading() {
+        this.elements.quizContent.innerHTML = `
+            <div id="question-container">
+                <div class="skeleton skeleton-text"></div>
+                <div class="skeleton skeleton-text"></div>
+            </div>
+            <div id="options-container">
+                ${Array(4).fill('<div class="skeleton skeleton-option"></div>').join('')}
+            </div>
+        `;
+    }
+
+    async nextQuestion() {
+        this.elements.nextBtnContainer.classList.add('hidden');
+        this.showSkeletonLoading();
+        
+        const subject = this.elements.subtopicSelect.value || this.elements.subjectSelect.value;
+        const question = await this.quiz.generateQuestion(subject);
+        
         if (!question) {
             this.showResults();
             return;
         }
 
-        this.displayQuestion(question);
-    }
-
-    displayQuestion(question) {
-        this.questionText.textContent = question.question;
+        this.quiz.currentQuestion = question;
         
-        if (question.imageUrl) {
-            this.questionImage.innerHTML = `<img src="${question.imageUrl}" alt="Question Image" class="question-image">`;
-            this.questionImage.classList.remove('hidden');
-        } else {
-            this.questionImage.innerHTML = '';
-            this.questionImage.classList.add('hidden');
-        }
+        let questionContent = `
+            <div id="question-container">
+                <p id="question-text">${question.question}</p>
+                ${question.imageUrl ? `<img src="${question.imageUrl}" alt="Medical image" class="question-image">` : ''}
+            </div>
+            <div id="options-container"></div>
+            <div class="collapsible-sections">
+                <details class="explanation-details">
+                    <summary>Explanation</summary>
+                    <div id="explanation-container"></div>
+                </details>
+                <details class="learning-objectives-details">
+                    <summary>Learning Objectives</summary>
+                    <div id="learning-objectives-container"></div>
+                </details>
+            </div>
+        `;
 
-        this.optionsContainer.innerHTML = '';
+        this.elements.quizContent.innerHTML = questionContent;
+
+        // Update references after recreation
+        this.elements.questionText = document.getElementById('question-text');
+        this.elements.optionsContainer = document.getElementById('options-container');
+        this.elements.explanationContainer = document.getElementById('explanation-container');
+        this.elements.learningObjectivesContainer = document.getElementById('learning-objectives-container');
+        
+        this.elements.currentQuestion.textContent = this.quiz.questionsAnswered + 1;
+        
         question.options.forEach((option, index) => {
-            const optionElement = document.createElement('div');
-            optionElement.className = 'option';
-            optionElement.textContent = option;
-            optionElement.addEventListener('click', () => this.handleOptionClick(index, question.correctIndex));
-            this.optionsContainer.appendChild(optionElement);
+            const button = document.createElement('button');
+            button.className = 'option';
+            button.textContent = option;
+            button.addEventListener('click', () => this.selectAnswer(index));
+            this.elements.optionsContainer.appendChild(button);
         });
 
-        this.explanationContainer.classList.add('hidden');
-        this.learningObjectivesContainer.classList.add('hidden');
-        this.nextBtnContainer.classList.add('hidden');
-
-        // Update progress
-        this.currentQuestionElement.textContent = this.quiz.questionsAnswered + 1;
-        this.totalQuestionsElement.textContent = this.quiz.questionLimit || '∞';
-
-        // Start timer if needed
-        if (this.quiz.timeLimit > 0) {
+        if (this.quiz.timeLimit) {
             this.startTimer();
         }
     }
 
-    async handleOptionClick(selectedIndex, correctIndex) {
-        const options = this.optionsContainer.children;
-        
-        // Disable all options
-        Array.from(options).forEach(option => {
-            option.style.pointerEvents = 'none';
-        });
-
-        // Show correct/incorrect
-        options[selectedIndex].classList.add(selectedIndex === correctIndex ? 'correct' : 'incorrect');
-        options[correctIndex].classList.add('correct');
-
-        // Update score
-        if (selectedIndex === correctIndex) {
-            this.quiz.score++;
-        } else {
-            this.quiz.wrongAnswers++;
+    startTimer() {
+        if (this.quiz.timer) {
+            clearInterval(this.quiz.timer);
         }
-        this.quiz.questionsAnswered++;
 
-        // Show explanation and learning objectives
-        await this.showExplanation(this.questionText.textContent, 
-                                 Array.from(options).map(opt => opt.textContent), 
-                                 correctIndex);
+        let timeLeft = this.quiz.timeLimit;
+        this.elements.timer.textContent = `Time left: ${timeLeft}s`;
 
-        this.nextBtnContainer.classList.remove('hidden');
+        this.quiz.timer = setInterval(() => {
+            timeLeft--;
+            this.elements.timer.textContent = `Time left: ${timeLeft}s`;
+
+            if (timeLeft <= 0) {
+                clearInterval(this.quiz.timer);
+                const options = this.elements.optionsContainer.children;
+                for (let option of options) {
+                    option.disabled = true;
+                }
+                this.selectAnswer(-1); // -1 indicates time out
+            }
+        }, 1000);
     }
 
-    async showExplanation(question, options, correctIndex) {
-        const explanation = await this.quiz.getExplanation(question, options, correctIndex);
-        const learningObjectives = await this.quiz.getLearningObjectives(question, options, correctIndex);
+    selectAnswer(selectedIndex) {
+        if (this.quiz.timer) {
+            clearInterval(this.quiz.timer);
+            this.elements.timer.textContent = '';
+        }
 
-        this.explanationContainer.innerHTML = `
+        const options = this.elements.optionsContainer.children;
+        for (let option of options) {
+            option.disabled = true;
+        }
+
+        const correctIndex = this.quiz.currentQuestion.correctIndex;
+        options[correctIndex].classList.add('correct');
+        
+        if (selectedIndex === correctIndex) {
+            this.quiz.score++;
+        } else if (selectedIndex !== -1) {
+            options[selectedIndex].classList.add('wrong');
+            this.quiz.wrongAnswers++;
+        }
+
+        this.quiz.questionsAnswered++;
+        this.elements.nextBtnContainer.classList.remove('hidden');
+        this.showExplanationAndObjectives();
+    }
+
+    async showExplanationAndObjectives() {
+        const currentQuestion = this.quiz.currentQuestion;
+        const explanation = await this.quiz.getExplanation(
+            currentQuestion.question,
+            currentQuestion.options,
+            currentQuestion.correctIndex
+        );
+
+        const learningObjectives = await this.quiz.getLearningObjectives(
+            currentQuestion.question,
+            currentQuestion.options,
+            currentQuestion.correctIndex
+        );
+
+        // Set up explanation section
+        const explanationDiv = document.createElement('div');
+        explanationDiv.className = 'explanation';
+        explanationDiv.innerHTML = `
             <div class="explanation-content">
-                <pre>${explanation.text}</pre>
+                <pre>${explanation.text.replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')}</pre>
                 ${explanation.imageUrl ? `
                     <div class="explanation-image">
                         <img src="${explanation.imageUrl}" alt="Explanation diagram" class="medical-diagram">
                     </div>
                 ` : ''}
             </div>
+            <div class="doubt-section">
+                <h4><b>Have a doubt?</b></h4>
+                <div class="doubt-input-container">
+                    <textarea 
+                        placeholder="Type your doubt here related to this question..."
+                        class="doubt-input"
+                    ></textarea>
+                    <button class="ask-doubt-btn">Ask Doubt</button>
+                </div>
+                <div class="doubt-answer hidden"></div>
+            </div>
         `;
-        this.explanationContainer.classList.remove('hidden');
 
-        this.learningObjectivesContainer.innerHTML = learningObjectives.content;
-        this.learningObjectivesContainer.classList.remove('hidden');
+        // Set up learning objectives section
+        const learningObjectivesDiv = document.createElement('div');
+        learningObjectivesDiv.className = 'learning-objectives';
+        learningObjectivesDiv.innerHTML = `
+            <div class="learning-objectives-content">
+                ${learningObjectives.content}
+                ${learningObjectives.imageUrl ? `
+                    <div class="learning-objectives-image">
+                        <img src="${learningObjectives.imageUrl}" alt="Learning diagram" class="medical-diagram">
+                    </div>
+                ` : ''}
+            </div>
+        `;
+
+        this.elements.explanationContainer.innerHTML = '';
+        this.elements.explanationContainer.appendChild(explanationDiv);
+        
+        this.elements.learningObjectivesContainer.innerHTML = '';
+        this.elements.learningObjectivesContainer.appendChild(learningObjectivesDiv);
+        
+        this.setupDoubtHandling(explanationDiv);
     }
 
-    handleNextQuestion() {
-        this.loadNextQuestion();
+    setupDoubtHandling(explanationDiv) {
+        const doubtInput = explanationDiv.querySelector('.doubt-input');
+        const askDoubtBtn = explanationDiv.querySelector('.ask-doubt-btn');
+        const doubtAnswer = explanationDiv.querySelector('.doubt-answer');
+
+        askDoubtBtn.addEventListener('click', async () => {
+            const doubt = doubtInput.value.trim();
+            if (!doubt) return;
+
+            askDoubtBtn.disabled = true;
+            askDoubtBtn.textContent = 'Processing...';
+            
+            try {
+                const answer = await this.quiz.askDoubt(
+                    doubt,
+                    this.quiz.currentQuestion.question
+                );
+                
+                doubtAnswer.innerHTML = `
+                    <div class="doubt-text">${answer.text.replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')}</div>
+                    ${answer.imageUrl ? `
+                        <div class="doubt-image">
+                            <img src="${answer.imageUrl}" alt="Explanation diagram" class="medical-diagram">
+                        </div>
+                    ` : ''}
+                `;
+                doubtAnswer.classList.remove('hidden');
+            } catch (error) {
+                doubtAnswer.textContent = 'Failed to get answer. Please try again.';
+                doubtAnswer.classList.remove('hidden');
+            } finally {
+                askDoubtBtn.disabled = false;
+                askDoubtBtn.textContent = 'Ask Doubt';
+            }
+        });
     }
 
     showResults() {
         const results = this.quiz.getResults();
+        this.elements.quizContent.innerHTML = '';
+        this.elements.scoreContainer.classList.remove('hidden');
+        this.elements.nextBtnContainer.classList.add('hidden');
         
-        this.quizContainer.classList.add('hidden');
-        this.scoreContainer.classList.remove('hidden');
-        
-        this.totalAttemptedElement.textContent = results.total;
-        this.correctAnswersElement.textContent = results.correct;
-        this.wrongAnswersElement.textContent = results.wrong;
-        this.scorePercentageElement.textContent = results.percentage;
-    }
-
-    startTimer() {
-        if (this.timer) clearInterval(this.timer);
-        
-        let timeLeft = this.quiz.timeLimit;
-        this.updateTimerDisplay(timeLeft);
-
-        this.timer = setInterval(() => {
-            timeLeft--;
-            this.updateTimerDisplay(timeLeft);
-
-            if (timeLeft <= 0) {
-                clearInterval(this.timer);
-                this.handleTimeUp();
-            }
-        }, 1000);
-    }
-
-    updateTimerDisplay(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        this.timerElement.textContent = `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-    }
-
-    handleTimeUp() {
-        const options = this.optionsContainer.children;
-        Array.from(options).forEach(option => {
-            option.style.pointerEvents = 'none';
-        });
-        this.nextBtnContainer.classList.remove('hidden');
-    }
-
-    validateSetup() {
-        if (!this.subjectSelect.value) {
-            alert('Please select a subject');
-            return false;
-        }
-        if (!this.subtopicSelect.value) {
-            alert('Please select a sub-topic');
-            return false;
-        }
-        if (!this.difficultySelect.value) {
-            alert('Please select difficulty level');
-            return false;
-        }
-        return true;
-    }
-
-    restartQuiz() {
-        window.location.reload();
+        this.elements.totalAttempted.textContent = results.total;
+        this.elements.correctAnswers.textContent = results.correct;
+        this.elements.wrongAnswers.textContent = results.wrong;
+        this.elements.scorePercentage.textContent = `${results.percentage}%`;
     }
 }

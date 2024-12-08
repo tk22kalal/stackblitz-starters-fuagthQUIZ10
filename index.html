@@ -71,33 +71,43 @@
     </div>
 
     <div id="quiz-container" class="quiz-container hidden">
-        <div class="quiz-header">
-            <div class="timer" id="timer">Time: <span id="time-remaining">--:--</span></div>
-            <div class="progress">Question <span id="current-question">0</span> of <span id="total-questions">0</span></div>
+        <h1>MBBS Quiz</h1>
+        <div class="quiz-stats">
+            <div id="timer" class="timer"></div>
+            <div id="progress" class="progress">Question: <span id="current-question">1</span>/<span id="total-questions">∞</span></div>
         </div>
-        <div id="quiz-content" class="quiz-content">
-            <div class="question-container">
-                <p id="question-text" class="question-text"></p>
-                <div id="question-image" class="question-image"></div>
+        <div id="loader" class="hidden">Loading...</div>
+        <div id="quiz-content">
+            <div id="question-container">
+                <p id="question-text"></p>
             </div>
-            <div id="options-container" class="options-container"></div>
-            <div id="explanation-container" class="explanation hidden"></div>
-            <div id="learning-objectives-container" class="learning-objectives hidden"></div>
+            <div id="options-container"></div>
         </div>
-        <div id="next-button-container" class="next-button-container hidden">
-            <button id="next-btn">Next Question</button>
+        <div id="score-container" class="hidden">
+            <h2>Quiz Complete!</h2>
+            <div class="results-grid">
+                <div class="result-card">
+                    <h3>Total Questions</h3>
+                    <p id="total-attempted">0</p>
+                </div>
+                <div class="result-card correct">
+                    <h3>Correct Answers</h3>
+                    <p id="correct-answers">0</p>
+                </div>
+                <div class="result-card wrong">
+                    <h3>Wrong Answers</h3>
+                    <p id="wrong-answers">0</p>
+                </div>
+                <div class="result-card percentage">
+                    <h3>Score Percentage</h3>
+                    <p id="score-percentage">0%</p>
+                </div>
+            </div>
+            <button id="restart-btn">New Quiz</button>
         </div>
     </div>
-
-    <div id="score-container" class="score-container hidden">
-        <h2>Quiz Results</h2>
-        <div class="score-details">
-            <p>Total Questions Attempted: <span id="total-attempted">0</span></p>
-            <p>Correct Answers: <span id="correct-answers">0</span></p>
-            <p>Wrong Answers: <span id="wrong-answers">0</span></p>
-            <p>Score Percentage: <span id="score-percentage">0</span>%</p>
-        </div>
-        <button id="restart-btn" class="restart-btn">Restart Quiz</button>
+    <div id="next-button-container" class="next-button-container hidden">
+        <button id="next-btn">Next Question</button>
     </div>
 </body>
 </html>

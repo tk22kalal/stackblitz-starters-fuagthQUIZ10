@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>MBBS Quiz</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="script.js"></script>
+</head>
+<body>
+    <div id="setup-container" class="setup-container">
+        <h1>MBBS Quiz Setup</h1>
+        <div id="api-key-container" class="api-key-container">
+            <div class="api-key-form">
+                <div class="form-group">
+                    <label for="gemini-api-key">Google Gemini API Key:</label>
+                    <input type="text" id="gemini-api-key" placeholder="Enter your Gemini API key" />
+                </div>
+                <div class="form-group">
+                    <label for="google-api-key">Google Cloud Vision API Key:</label>
+                    <input type="text" id="google-api-key" placeholder="Enter your Google Cloud Vision API key" />
+                </div>
+                <button id="save-api-keys" class="save-api-keys-btn">Save API Keys</button>
+            </div>
+        </div>
+        <div class="setup-form">
+            <div class="form-group">
+                <label for="subject-select">Select Subject:</label>
+                <select id="subject-select" required>
+                    <option value="">Choose a subject...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="subtopic-select">Select Sub-topic:</label>
+                <select id="subtopic-select" required disabled>
+                    <option value="">Choose a sub-topic...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="difficulty-select">Select Difficulty:</label>
+                <select id="difficulty-select" required>
+                    <option value="">Choose difficulty level...</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
+                </select>
+                <div id="difficulty-info" class="difficulty-info"></div>
+            </div>
+            <div class="form-group">
+                <label for="questions-select">Number of Questions:</label>
+                <select id="questions-select" required>
+                    <option value="0">No limit</option>
+                    <option value="10">10 questions</option>
+                    <option value="30">30 questions</option>
+                    <option value="60">60 questions</option>
+                    <option value="90">90 questions</option>
+                    <option value="120">120 questions</option>
+                    <option value="180">180 questions</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="time-select">Time per Question:</label>
+                <select id="time-select" required>
+                    <option value="0">No time limit</option>
+                    <option value="40">40 seconds</option>
+                    <option value="60">60 seconds</option>
+                </select>
+            </div>
+            <button id="start-quiz-btn">Start Quiz</button>
+        </div>
+    </div>
+
+    <div id="quiz-container" class="quiz-container hidden">
+        <div class="quiz-header">
+            <div class="timer" id="timer">Time: <span id="time-remaining">--:--</span></div>
+            <div class="progress">Question <span id="current-question">0</span> of <span id="total-questions">0</span></div>
+        </div>
+        <div id="quiz-content" class="quiz-content">
+            <div class="question-container">
+                <p id="question-text" class="question-text"></p>
+                <div id="question-image" class="question-image"></div>
+            </div>
+            <div id="options-container" class="options-container"></div>
+            <div id="explanation-container" class="explanation hidden"></div>
+            <div id="learning-objectives-container" class="learning-objectives hidden"></div>
+        </div>
+        <div id="next-button-container" class="next-button-container hidden">
+            <button id="next-btn">Next Question</button>
+        </div>
+    </div>
+
+    <div id="score-container" class="score-container hidden">
+        <h2>Quiz Results</h2>
+        <div class="score-details">
+            <p>Total Questions Attempted: <span id="total-attempted">0</span></p>
+            <p>Correct Answers: <span id="correct-answers">0</span></p>
+            <p>Wrong Answers: <span id="wrong-answers">0</span></p>
+            <p>Score Percentage: <span id="score-percentage">0</span>%</p>
+        </div>
+        <button id="restart-btn" class="restart-btn">Restart Quiz</button>
+    </div>
+</body>
+</html>

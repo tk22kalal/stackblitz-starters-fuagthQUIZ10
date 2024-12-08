@@ -1,0 +1,475 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f0f2f5;
+}
+
+/* Container Styles */
+.setup-container, .quiz-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* API Key Container Styles */
+.api-key-container {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.api-key-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.api-key-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.api-key-form input[type="text"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.api-key-form input[type="text"]:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.api-key-form input[type="text"]::placeholder {
+    color: #94a3b8;
+}
+
+.save-api-keys-btn {
+    background-color: #10b981;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.save-api-keys-btn:hover {
+    background-color: #059669;
+}
+
+/* Form Styles */
+.setup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #4b5563;
+}
+
+select, input {
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: white;
+    transition: all 0.2s;
+}
+
+select:focus, input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+/* Button Styles */
+button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#start-quiz-btn {
+    background-color: #2563eb;
+    color: white;
+    margin-top: 1rem;
+}
+
+#start-quiz-btn:hover {
+    background-color: #1d4ed8;
+}
+
+/* Quiz Container Styles */
+.quiz-container {
+    display: none;
+}
+
+.quiz-container.active {
+    display: block;
+}
+
+/* Question Styles */
+.question-container {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+.question-text {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+/* Options Styles */
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.option {
+    padding: 1rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.option:hover {
+    background: #f3f4f6;
+}
+
+.option.selected {
+    background: #dbeafe;
+    border-color: #2563eb;
+}
+
+.option.correct {
+    background: #dcfce7;
+    border-color: #16a34a;
+}
+
+.option.incorrect {
+    background: #fee2e2;
+    border-color: #dc2626;
+}
+
+/* Explanation Styles */
+.explanation {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.explanation-content {
+    margin-bottom: 1.5rem;
+}
+
+.explanation-content pre {
+    white-space: pre-wrap;
+    font-family: inherit;
+}
+
+.explanation-image {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.medical-diagram {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Learning Objectives Styles */
+.learning-objectives {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Key Points Style */
+.key-points {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.key-points h4 {
+    color: #1e40af;
+    margin-bottom: 1rem;
+}
+
+.key-points ul {
+    list-style-type: none;
+    padding-left: 1.5rem;
+}
+
+.key-points li {
+    position: relative;
+    margin-bottom: 0.75rem;
+    padding-left: 1.5rem;
+}
+
+.key-points li:before {
+    content: "•";
+    color: #2563eb;
+    position: absolute;
+    left: 0;
+}
+
+/* Table Style */
+.concept-table-container {
+    margin-top: 1rem;
+    overflow-x: auto;
+}
+
+.concept-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.5rem;
+}
+
+.concept-table th {
+    background: #f1f5f9;
+    padding: 0.75rem;
+    text-align: left;
+    border: 1px solid #e2e8f0;
+}
+
+.concept-table td {
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+}
+
+/* Formula Style */
+.formula-box {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.formula-title {
+    font-weight: bold;
+    color: #1e40af;
+    margin-bottom: 1rem;
+}
+
+.formula {
+    font-family: 'Courier New', monospace;
+    background: #fff;
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+/* Mnemonic Style */
+.mnemonic {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.mnemonic-word {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #2563eb;
+    margin: 1rem 0;
+    text-align: center;
+}
+
+/* Flowchart Style */
+.flowchart-container {
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+.flowchart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.flowchart-step {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.flowchart-arrow {
+    color: #64748b;
+    font-size: 1.5rem;
+}
+
+/* Flashcard Style */
+.flashcard {
+    perspective: 1000px;
+    margin-top: 1rem;
+    height: 200px;
+    cursor: pointer;
+}
+
+.flashcard-front,
+.flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    transition: transform 0.6s;
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.flashcard-back {
+    transform: rotateY(180deg);
+}
+
+.flashcard.flipped .flashcard-front {
+    transform: rotateY(180deg);
+}
+
+.flashcard.flipped .flashcard-back {
+    transform: rotateY(0);
+}
+
+/* Doubt Section Styles */
+.doubt-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.doubt-input-container {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.doubt-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.ask-doubt-btn {
+    background-color: #2563eb;
+    color: white;
+    align-self: flex-start;
+}
+
+.ask-doubt-btn:hover {
+    background-color: #1d4ed8;
+}
+
+.doubt-answer {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 6px;
+    display: none;
+}
+
+.doubt-answer.visible {
+    display: block;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .setup-container, .quiz-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    .api-key-container {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .api-key-form input[type="text"] {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .save-api-keys-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .doubt-input-container {
+        flex-direction: column;
+    }
+
+    .ask-doubt-btn {
+        width: 100%;
+    }
+
+    .flowchart-step {
+        max-width: 100%;
+    }
+}
